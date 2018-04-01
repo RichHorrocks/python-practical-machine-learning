@@ -1,6 +1,9 @@
 import pandas as pd
 import quandl
 import math
+import numpy as np
+from sklearn import preprocessing, cross_validation, svm
+from sklearn.linear_model import LinearRegression
 
 # Get the data frame. (i.e. The dataset.)
 df = quandl.get('WIKI/GOOGL')
@@ -26,5 +29,14 @@ forecast_out = int(math.ceil(0.01 * len(df)))
 
 df['label'] = df[forecast_col].shift(-forecast_out)
 df.dropna(inplace=True)
-print(df.head())
-print(df.tail())
+
+X = np.array(df.drop(['label'], 1))
+y = np.array(df['label'])
+
+X = preprocessing.scale(X)
+
+#X = X[:-forecast_out + 1]
+df.dropna(inplace=True)
+y = np.array(df['label'])
+
+print(len(X), len(y))
